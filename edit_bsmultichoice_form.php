@@ -40,6 +40,15 @@ class qtype_bsmultichoice_edit_form extends question_edit_form {
      * @param object $mform the form being built.
      */
     protected function definition_inner($mform) {
+        /// Add Infographic field ///
+        $mform->addElement('editor',
+            get_string('infographicfieldidentifier', 'qtype_bsmultichoice'),
+            get_string('infographicfieldlabel', 'qtype_bsmultichoice'),
+            array('rows' => 15), $this->editoroptions);
+        $mform->setType('questioninfo', PARAM_RAW);
+        // $mform->addRule('questioninfo', null, 'required', null, 'client');
+        ///
+
         $menu = array(
             get_string('answersingleno', 'qtype_bsmultichoice'),
             get_string('answersingleyes', 'qtype_bsmultichoice'),

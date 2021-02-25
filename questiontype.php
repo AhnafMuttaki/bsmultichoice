@@ -150,6 +150,14 @@ class qtype_bsmultichoice extends question_type {
         }
 
         $options = $DB->get_record('qtype_bsmultichoice_options', array('questionid' => $question->id));
+
+        // Initialize Temp Additional Info
+        $additionalInfo = $question->questioninfo;
+        $tempInfoGraphicData = "";
+        if(isset($additionalInfo['text'])){
+            $tempInfoGraphicData = $additionalInfo['text'];
+        }
+
         if (!$options) {
             $options = new stdClass();
             $options->questionid = $question->id;
@@ -157,6 +165,9 @@ class qtype_bsmultichoice extends question_type {
             $options->partiallycorrectfeedback = '';
             $options->incorrectfeedback = '';
             $options->showstandardinstruction = 0;
+            if($tempInfoGraphicData != ""){
+                $options->infographicdata = $tempInfoGraphicData;
+            }
             $options->id = $DB->insert_record('qtype_bsmultichoice_options', $options);
         }
 
