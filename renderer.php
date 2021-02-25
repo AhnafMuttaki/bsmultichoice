@@ -140,10 +140,42 @@ abstract class qtype_bsmultichoice_renderer_base extends qtype_with_combined_fee
             }
             $classes[] = $class;
         }
-
+        // Get infographic data for accordions
+        global $DB;
+        $params = array(
+            'questionid' => $question->id
+        );
+        $sql = "SELECT * FROM {qtype_bsmultichoice_options} WHERE questionid = :questionid";
+        $optionrow = $DB->get_record_sql($sql, $params);
         $result = '';
-        $result .= html_writer::tag('div', $question->format_questiontext($qa),
-                array('class' => 'qtext'));
+        if($optionrow){
+            $infographicdata = $optionrow->infographicdata;
+            if(trim($infographicdata) !== ""){
+                $accordionid = "acc_que_".$question->id;
+                $result .= html_writer::tag('div', $question->format_questiontext($qa),
+                        array('class' => 'qtext'))."<a class='btn btn-primary' data-toggle='collapse' href='#$accordionid' role='button' aria-expanded='false' aria-controls='collapseExample'>
+                        que accordion
+                      </a>"."\n";
+
+                $result .=    "<br/>
+                      <br/>
+                      <div class='collapse' id='$accordionid'>
+                      <div class='card card-body'>
+                        $infographicdata
+                      </div>
+                      </div>";
+            }
+            else{
+                $result .= html_writer::tag('div', $question->format_questiontext($qa),
+                    array('class' => 'qtext'));
+            }
+
+        }
+        else{
+            $result .= html_writer::tag('div', $question->format_questiontext($qa),
+                    array('class' => 'qtext'));
+        }
+        // End of adding infographic data
 
         $result .= html_writer::start_tag('div', array('class' => 'ablock'));
         if ($question->showstandardinstruction == 1) {
