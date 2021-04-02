@@ -41,12 +41,18 @@ class qtype_bsmultichoice_edit_form extends question_edit_form {
      */
     protected function definition_inner($mform) {
         /// Add Infographic field ///
+        $tempinfographicdata = "";
+        if (isset($this->question->options->infographicdata)){
+            if($this->question->options->infographicdata !== ""){
+                $tempinfographicdata = $this->question->options->infographicdata;
+            }
+        }
         $mform->addElement('editor',
-            get_string('infographicfieldidentifier', 'qtype_bsmultichoice'),
+            'infographicdata',
             get_string('infographicfieldlabel', 'qtype_bsmultichoice'),
             array('rows' => 15), $this->editoroptions);
-        $mform->setType('questioninfo', PARAM_RAW);
-        // $mform->addRule('questioninfo', null, 'required', null, 'client');
+        $mform->setType('infographicdata', PARAM_RAW);
+        $mform->setDefault('infographicdata',array('text'=>$tempinfographicdata,'format'=>'1'));
         ///
 
         $menu = array(
@@ -114,6 +120,7 @@ class qtype_bsmultichoice_edit_form extends question_edit_form {
             $question->shuffleanswers = $question->options->shuffleanswers;
             $question->answernumbering = $question->options->answernumbering;
             $question->showstandardinstruction = $question->options->showstandardinstruction;
+            $question->infographicdata = $question->options->infographicdata;
         }
 
         return $question;

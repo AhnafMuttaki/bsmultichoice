@@ -75,5 +75,5 @@ $string['singleanswer'] = 'Choose one answer.';
 $string['showstandardinstruction'] = 'Show standard instructions';
 $string['showstandardinstruction_help'] = 'Whether to show the instructions "Select one:" or "Select one or more:" before multiple choice answers.';
 $string['toomanyselected'] = 'You have selected too many options.';
-$string['infographicfieldidentifier'] = 'questioninfo';
+$string['infographicfieldidentifier'] = 'infographicdata';
 $string['infographicfieldlabel'] = 'Additional Infographic Data';

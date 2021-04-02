@@ -152,7 +152,7 @@ class qtype_bsmultichoice extends question_type {
         $options = $DB->get_record('qtype_bsmultichoice_options', array('questionid' => $question->id));
 
         // Initialize Temp Additional Info
-        $additionalInfo = $question->questioninfo;
+        $additionalInfo = $question->infographicdata;
         $tempInfoGraphicData = "";
         if(isset($additionalInfo['text'])){
             $tempInfoGraphicData = $additionalInfo['text'];
@@ -175,6 +175,11 @@ class qtype_bsmultichoice extends question_type {
         if (isset($question->layout)) {
             $options->layout = $question->layout;
         }
+
+        if($tempInfoGraphicData != ""){
+            $options->infographicdata = $tempInfoGraphicData;
+        }
+
         $options->answernumbering = $question->answernumbering;
         $options->shuffleanswers = $question->shuffleanswers;
         $options->showstandardinstruction = !empty($question->showstandardinstruction);
