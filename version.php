@@ -28,6 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'qtype_bsmultichoice';
 $plugin->version   = 2021022503;
 
-$plugin->requires  = 2020060900;
+$plugin->requires  = 2019111803;
 
 $plugin->maturity  = MATURITY_STABLE;
