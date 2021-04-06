@@ -151,12 +151,6 @@ class qtype_bsmultichoice extends question_type {
 
         $options = $DB->get_record('qtype_bsmultichoice_options', array('questionid' => $question->id));
 
-        // Initialize Temp Additional Info
-        $additionalInfo = $question->infographicdata;
-        $tempInfoGraphicData = "";
-        if(isset($additionalInfo['text'])){
-            $tempInfoGraphicData = $additionalInfo['text'];
-        }
 
         if (!$options) {
             $options = new stdClass();
@@ -165,9 +159,6 @@ class qtype_bsmultichoice extends question_type {
             $options->partiallycorrectfeedback = '';
             $options->incorrectfeedback = '';
             $options->showstandardinstruction = 0;
-            if($tempInfoGraphicData != ""){
-                $options->infographicdata = $tempInfoGraphicData;
-            }
             $options->id = $DB->insert_record('qtype_bsmultichoice_options', $options);
         }
 
@@ -176,8 +167,11 @@ class qtype_bsmultichoice extends question_type {
             $options->layout = $question->layout;
         }
 
-        if($tempInfoGraphicData != ""){
-            $options->infographicdata = $tempInfoGraphicData;
+        if (!empty($question->infographicdata)) {
+            // Save draft area file to a actual file location and rewrite the infograpic data with internal link.
+            $options->infographicdata = file_save_draft_area_files($question->infographicdata['itemid'],
+                $context->id, 'qtype_bsmultichoice', 'infographicdata', (int)$options->id,
+                $this->fileoptions, $question->infographicdata['text']);
         }
 
         $options->answernumbering = $question->answernumbering;

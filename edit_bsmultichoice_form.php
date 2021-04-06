@@ -47,12 +47,12 @@ class qtype_bsmultichoice_edit_form extends question_edit_form {
                 $tempinfographicdata = $this->question->options->infographicdata;
             }
         }
-        $mform->addElement('editor',
-            'infographicdata',
-            get_string('infographicfieldlabel', 'qtype_bsmultichoice'),
+
+        $mform->addElement('editor', 'infographicdata', get_string('infographicfieldlabel', 'qtype_bsmultichoice'),
             array('rows' => 15), $this->editoroptions);
         $mform->setType('infographicdata', PARAM_RAW);
-        $mform->setDefault('infographicdata',array('text'=>$tempinfographicdata,'format'=>'1'));
+//        $mform->setDefault('infographicdata',array('text'=>$tempinfographicdata,'format'=>'1'));
+
         ///
 
         $menu = array(
@@ -124,6 +124,34 @@ class qtype_bsmultichoice_edit_form extends question_edit_form {
         }
 
         return $question;
+    }
+
+    public function set_data($question) {
+        // Prepare infographic data.
+        if(isset($question->options)){
+            $draftid = file_get_submitted_draft_itemid('infographicdata');
+            if (!empty($question->options->infographicdata)) {
+                $infographicdataText = $question->options->infographicdata;
+            } else {
+                $infographicdataText = $this->_form->getElement('infographicdata')->getValue();
+                $infographicdataText = $infographicdataText['text'];
+            }
+
+
+            // Prepare draft area for file save.
+            $infographicdataText = file_prepare_draft_area($draftid, $this->context->id,
+                'qtype_bsmultichoice', 'infographicdata', empty($question->options->id) ? null : (int) $question->options->id,
+                $this->fileoptions, $infographicdataText);
+
+
+            $question->options->infographicdata = array();
+            $question->options->infographicdata['text'] = $infographicdataText;
+            $question->options->infographicdata['format'] = empty($question->infographicdataformat) ?
+                editors_get_preferred_format() : $question->infographicdataformat;
+            $question->options->infographicdata['itemid'] = $draftid;
+
+        }
+        parent::set_data($question);
     }
 
     public function validation($data, $files) {

@@ -65,8 +65,8 @@ abstract class qtype_bsmultichoice_renderer_base extends qtype_with_combined_fee
 
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
-
         $question = $qa->get_question();
+
         $response = $question->get_response($qa);
 
         $inputname = $qa->get_qt_field_name('answer');
@@ -149,7 +149,15 @@ abstract class qtype_bsmultichoice_renderer_base extends qtype_with_combined_fee
         $optionrow = $DB->get_record_sql($sql, $params);
         $result = '';
         if($optionrow){
+
+            /// Make infographic data
             $infographicdata = $optionrow->infographicdata;
+            $formatoptions = new stdClass();
+            $formatoptions->noclean = true;
+            $formatoptions->para = false;
+            $text = $qa->rewrite_pluginfile_urls($infographicdata, 'qtype_bsmultichoice', 'infographicdata', (int)$optionrow->id);
+            $infographic = format_text($text, 1, $formatoptions);
+            ///
             if(trim($infographicdata) !== ""){
                 $accordionid = "acc_que_".$question->id;
                 $result .= html_writer::tag('div', $question->format_questiontext($qa),
@@ -161,7 +169,7 @@ abstract class qtype_bsmultichoice_renderer_base extends qtype_with_combined_fee
                       <br/>
                       <div class='collapse' id='$accordionid'>
                       <div class='card card-body'>
-                        $infographicdata
+                        $infographic
                       </div>
                       </div>";
             }

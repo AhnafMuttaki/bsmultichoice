@@ -42,7 +42,25 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool
  */
 function qtype_bsmultichoice_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
-    global $CFG;
-    require_once($CFG->libdir . '/questionlib.php');
-    question_pluginfile($course, $context, 'qtype_bsmultichoice', $filearea, $args, $forcedownload, $options);
+    if($filearea == "infographicdata"){
+        // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
+        if ($context->contextlevel != CONTEXT_COURSE) {
+            return false;
+        }
+        $itemid = $args[2];
+        $filename = array_pop($args);
+
+        $filepath = '/';
+        $fs = get_file_storage();
+        $file = $fs->get_file($context->id, 'qtype_bsmultichoice', $filearea, $itemid, $filepath, $filename);
+        if (!$file) {
+            return false;
+        }
+        send_stored_file($file, 0, 0, $forcedownload, $options);
+    }
+    else{
+        global $CFG;
+        require_once($CFG->libdir . '/questionlib.php');
+        question_pluginfile($course, $context, 'qtype_bsmultichoice', $filearea, $args, $forcedownload, $options);
+    }
 }
